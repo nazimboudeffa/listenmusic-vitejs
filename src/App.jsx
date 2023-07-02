@@ -1,34 +1,91 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
+import { useState, useEffect } from 'react'
 import './App.css'
+import axios from 'axios';
 
 function App() {
-  const [count, setCount] = useState(0)
+  const CLIENT_ID = import.meta.env.VITE_CLIENT_ID
+  const REDIRECT_URI = import.meta.env.VITE_REDIRECT_URI || "http://127.0.0.1:5173"
+  const AUTH_ENDPOINT = "https://accounts.spotify.com/authorize"
+  const RESPONSE_TYPE = "token"
+
+  const [token, setToken] = useState("")
+  const [searchKey, setSearchKey] = useState("")
+  const [artists, setArtists] = useState([])
+
+  useEffect(() => {
+      const hash = window.location.hash
+      let token = window.localStorage.getItem("token")
+
+      // getToken()
+
+
+      if (!token && hash) {
+          token = hash.substring(1).split("&").find(elem => elem.startsWith("access_token")).split("=")[1]
+
+          window.location.hash = ""
+          window.localStorage.setItem("token", token)
+      }
+
+      setToken(token)
+
+  }, [])
+
+  const logout = () => {
+      setToken("")
+      window.localStorage.removeItem("token")
+  }
+
+  const searchArtists = async (e) => {
+      e.preventDefault()
+      const {data} = await axios.get("https://api.spotify.com/v1/search", {
+          headers: {
+              Authorization: `Bearer ${token}`
+          },
+          params: {
+              q: searchKey,
+              type: "artist"
+          }
+      })
+      console.log(data)
+      setArtists(data.artists.items)
+  }
+
+  const renderArtists = () => {
+      return artists.map(artist => (
+          <div key={artist.id} className='flex flex-col'>
+              {artist.images.length ? <img width={"100%"} src={artist.images[0].url} alt=""/> : <div>No Image</div>}
+              {artist.name}
+              <a href={artist.uri} className="rounded bg-black text-white">Listen</a>
+          </div>
+      ))
+  }
 
   return (
-    <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </div>
-  )
+      <>
+          <header className='mx-auto'>
+
+              <h1>Spotify React</h1>
+              {!token ?
+                  <a href={`${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=${RESPONSE_TYPE}`} className='h-10 w-32 rounded-lg hover:text-black hover:bg-green-500 bg-black text-green-500 mt-5'>Login to Spotify</a>
+                  : <button onClick={logout} className='h-10 w-32 rounded-lg hover:text-black hover:bg-green-500 bg-black text-green-500'>Logout</button>}
+
+              {token ?
+                  <form onSubmit={searchArtists}>
+                      <input type="text" onChange={e => setSearchKey(e.target.value)} className='border border-black rounded'/>
+                      <button type={"submit"} className='rounded-lg text-green-500 bg-black'>Search</button>
+                  </form>
+
+                  : <h2>Login before searching</h2>
+              }
+
+          </header>
+          <section>
+            <div className="grid grid-cols-4 gap-4">
+              {renderArtists()}
+            </div>
+          </section>
+      </>
+  );
 }
 
 export default App
