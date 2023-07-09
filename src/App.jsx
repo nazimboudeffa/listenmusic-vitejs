@@ -11,6 +11,8 @@ function App() {
   const [token, setToken] = useState("")
   const [searchKey, setSearchKey] = useState("")
   const [artists, setArtists] = useState([])
+  const [playListFR, setPlayListFR] = useState([])
+  const [playListDZ, setPlayListDZ] = useState([])
 
   useEffect(() => {
       const hash = window.location.hash
@@ -28,7 +30,22 @@ function App() {
 
       setToken(token)
 
+      if (token) {
+          getPlayList(token, "FR").then(playList => setPlayListFR(playList))
+          getPlayList(token, "DZ").then(playList => setPlayListDZ(playList))
+      }
+
   }, [])
+
+  const getPlayList = async (token, country) => {
+        const {data} = await axios.get("https://api.spotify.com/v1/browse/featured-playlists?country="+country, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
+        console.log(data)
+        return data.playlists.items
+    }
 
   const logout = () => {
       setToken("")
@@ -82,6 +99,30 @@ function App() {
           <section>
             <div className="grid grid-cols-4 gap-4">
               {renderArtists()}
+            </div>
+          </section>
+          <section>
+          <div className='text-2xl'>FRANCE</div>
+            <div className="grid grid-cols-4 gap-4">
+                {playListFR.map(playList => (
+                    <div key={playList.id} className='flex flex-col'>
+                        {playList.images.length ? <img width={"100%"} src={playList.images[0].url} alt=""/> : <div>No Image</div>}
+                        {playList.name}
+                        <a href={playList.uri} className="rounded bg-black text-white">Listen</a>
+                    </div>
+                ))}
+            </div>
+          </section>
+          <section>
+            <div className='text-2xl'>ALGERIA</div>
+            <div className="grid grid-cols-4 gap-4">
+                {playListDZ.map(playList => (
+                    <div key={playList.id} className='flex flex-col'>
+                        {playList.images.length ? <img width={"100%"} src={playList.images[0].url} alt=""/> : <div>No Image</div>}
+                        {playList.name}
+                        <a href={playList.uri} className="rounded bg-black text-white">Listen</a>
+                    </div>
+                ))}
             </div>
           </section>
       </>
