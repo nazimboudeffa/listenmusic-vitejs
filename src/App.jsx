@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import './App.css'
 import axios from 'axios';
+import NavBar from './components/NavBar';
 
 function App() {
   const CLIENT_ID = import.meta.env.VITE_CLIENT_ID
