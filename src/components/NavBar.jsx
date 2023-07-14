@@ -1,4 +1,37 @@
+import React, { useState, useEffect } from "react";
+
 export default function NavBar() {
+    
+    const CLIENT_ID = import.meta.env.VITE_CLIENT_ID
+    const REDIRECT_URI = import.meta.env.VITE_REDIRECT_URI || "http://127.0.0.1:5173"
+    const AUTH_ENDPOINT = "https://accounts.spotify.com/authorize"
+    const RESPONSE_TYPE = "token"
+  
+    const [token, setToken] = useState("")
+  
+    useEffect(() => {
+      const hash = window.location.hash
+      let token = window.localStorage.getItem("token")
+  
+      // getToken()
+  
+  
+      if (!token && hash) {
+          token = hash.substring(1).split("&").find(elem => elem.startsWith("access_token")).split("=")[1]
+  
+          window.location.hash = ""
+          window.localStorage.setItem("token", token)
+      }
+  
+      setToken(token)
+  
+    }, [])
+
+    const logout = () => {
+        setToken("")
+        window.localStorage.removeItem("token")
+    }
+
     return (
         <header className="bg-white">
         <div className="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">
@@ -82,12 +115,11 @@ export default function NavBar() {
 
             <div className="flex items-center gap-4">
                 <div className="sm:flex sm:gap-4">
-                <a
-                    className="rounded-md bg-teal-600 px-5 py-2.5 text-sm font-medium text-white shadow"
-                    href="/"
-                >
-                    Login
-                </a>
+                {!token ?
+                    <a href={`${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=${RESPONSE_TYPE}`} className="rounded-md bg-teal-600 px-5 py-2.5 text-sm font-medium text-white shadow">Login</a>
+                    : 
+                    <button onClick={logout} className="rounded-md bg-gray-100 px-5 py-2.5 text-sm font-medium text-teal-600">Logout</button>
+                }
                 </div>
 
                 <div className="block md:hidden">
