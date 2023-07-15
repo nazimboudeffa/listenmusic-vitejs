@@ -1,7 +1,9 @@
 const HitParade = () => {
     return (
         <div>
-            Hit Parade
+            <h1 className="text-xl">Top 10</h1>
+            <p>We are working on this feature</p>
+            <p>Coming soon!</p>
         </div>
     );
 }
