@@ -6,6 +6,7 @@ import PlayLists from './components/PlayLists';
 import { Routes, Route } from 'react-router-dom'
 import About from './components/About';
 import HitParade from './components/HitParade';
+import Search from './components/Search';
 
 const App = () => {
 
@@ -24,6 +25,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={!token ? <Hero /> : <PlayLists />} />
         <Route path="/hit-parade" element={!token ? <div>Please login!</div> : <HitParade />} />
+        <Route path="/search" element={!token ? <div>Please login!</div> : <Search />} />
         <Route path="/about" element={<About />} />
       </Routes>
     </>
