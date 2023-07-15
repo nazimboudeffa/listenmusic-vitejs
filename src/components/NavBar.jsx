@@ -1,43 +1,41 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
 export default function NavBar() {
-    
+
     const CLIENT_ID = import.meta.env.VITE_CLIENT_ID
     const REDIRECT_URI = import.meta.env.VITE_REDIRECT_URI || "http://127.0.0.1:5173"
     const AUTH_ENDPOINT = "https://accounts.spotify.com/authorize"
     const RESPONSE_TYPE = "token"
   
     const [token, setToken] = useState("")
-  
-    useEffect(() => {
-      const hash = window.location.hash
-      let token = window.localStorage.getItem("token")
-  
-      // getToken()
-  
-  
-      if (!token && hash) {
-          token = hash.substring(1).split("&").find(elem => elem.startsWith("access_token")).split("=")[1]
-  
-          window.location.hash = ""
-          window.localStorage.setItem("token", token)
-      }
-  
-      setToken(token)
-  
-    }, [])
 
-    const logout = () => {
+    useEffect(() => {
+        const hash = window.location.hash
+        let token = window.localStorage.getItem("token")
+    
+        // getToken()
+        if (!token && hash) {
+            token = hash.substring(1).split("&").find(elem => elem.startsWith("access_token")).split("=")[1]
+    
+            window.location.hash = ""
+            window.localStorage.setItem("token", token)
+        }
+    
+        setToken(token)
+      }, [])
+    
+      const logout = () => {
         setToken("")
         window.localStorage.removeItem("token")
-    }
+      }
 
     return (
         <header className="bg-white">
         <div className="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">
             <div className="flex h-16 items-center justify-between">
             <div className="md:flex md:items-center md:gap-12">
-                <a className="block text-teal-600" href="/">
+                <Link className="block text-teal-600" to="/">
                 <span className="sr-only">Home</span>
                 <svg
                     className="h-8"
@@ -50,64 +48,28 @@ export default function NavBar() {
                     fill="currentColor"
                     />
                 </svg>
-                </a>
+                </Link>
             </div>
 
             <div className="hidden md:block">
                 <nav aria-label="Global">
                 <ul className="flex items-center gap-6 text-sm">
                     <li>
-                    <a
+                    <Link
                         className="text-gray-500 transition hover:text-gray-500/75"
-                        href="/"
+                        to="/hit-parade"
+                    >
+                        Top10
+                    </Link>
+                    </li>
+
+                    <li>
+                    <Link
+                        className="text-gray-500 transition hover:text-gray-500/75"
+                        to="/about"
                     >
                         About
-                    </a>
-                    </li>
-
-                    <li>
-                    <a
-                        className="text-gray-500 transition hover:text-gray-500/75"
-                        href="/"
-                    >
-                        Careers
-                    </a>
-                    </li>
-
-                    <li>
-                    <a
-                        className="text-gray-500 transition hover:text-gray-500/75"
-                        href="/"
-                    >
-                        History
-                    </a>
-                    </li>
-
-                    <li>
-                    <a
-                        className="text-gray-500 transition hover:text-gray-500/75"
-                        href="/"
-                    >
-                        Services
-                    </a>
-                    </li>
-
-                    <li>
-                    <a
-                        className="text-gray-500 transition hover:text-gray-500/75"
-                        href="/"
-                    >
-                        Projects
-                    </a>
-                    </li>
-
-                    <li>
-                    <a
-                        className="text-gray-500 transition hover:text-gray-500/75"
-                        href="/"
-                    >
-                        Blog
-                    </a>
+                    </Link>
                     </li>
                 </ul>
                 </nav>
