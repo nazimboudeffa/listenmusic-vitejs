@@ -59,7 +59,7 @@ export default function NavBar() {
                         className="text-gray-500 transition hover:text-gray-500/75"
                         to="/hit-parade"
                     >
-                        Top10
+                        Hits
                     </Link>
                     </li>
 
@@ -69,6 +69,15 @@ export default function NavBar() {
                         to="/about"
                     >
                         About
+                    </Link>
+                    </li>
+
+                    <li>
+                    <Link
+                        className="text-gray-500 transition hover:text-gray-500/75"
+                        to="/search"
+                    >
+                        Search
                     </Link>
                     </li>
                 </ul>
