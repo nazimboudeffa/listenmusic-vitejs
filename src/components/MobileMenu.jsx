@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
 
 export default function MobileMenu ({open}) {
-    console.log(open)
     return (
         <div className={`${open? "block" : "hidden"} flex flex-col`}>
             <Link href="/hit-parade">
