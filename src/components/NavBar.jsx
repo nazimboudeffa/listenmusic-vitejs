@@ -36,7 +36,7 @@ export default function NavBar() {
         <header className="bg-white">
         <div className="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">
             <div className="flex h-16 items-center justify-between">
-            <button className="rounded bg-gray-100 p-2 text-gray-600 transition hover:text-gray-600/75 lg:hidden" onClick={()=>setOpen(!open)} >
+            <button className="rounded bg-gray-100 p-2 text-gray-600 transition hover:text-gray-600/75 md:hidden" onClick={()=>setOpen(!open)} >
                 {open?
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -58,6 +58,7 @@ export default function NavBar() {
                     </svg>
                 }
             </button>
+
             <div className="md:flex md:items-center md:gap-12">
                 <Link className="block text-teal-600" to="/">
                 <span className="sr-only">Home</span>
