@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import MobileMenu from "./MobileMenu";
 
 export default function NavBar() {
 
@@ -9,6 +10,7 @@ export default function NavBar() {
     const RESPONSE_TYPE = "token"
   
     const [token, setToken] = useState("")
+    const [open, setOpen] = useState(false);
 
     useEffect(() => {
         const hash = window.location.hash
@@ -34,6 +36,28 @@ export default function NavBar() {
         <header className="bg-white">
         <div className="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">
             <div className="flex h-16 items-center justify-between">
+            <button className="rounded bg-gray-100 p-2 text-gray-600 transition hover:text-gray-600/75 lg:hidden" onClick={()=>setOpen(!open)} >
+                {open?
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                    :
+                    <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-5 w-5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    >
+                    <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M4 6h16M4 12h16M4 18h16"
+                    />
+                    </svg>
+                }
+            </button>
             <div className="md:flex md:items-center md:gap-12">
                 <Link className="block text-teal-600" to="/">
                 <span className="sr-only">Home</span>
@@ -92,30 +116,10 @@ export default function NavBar() {
                     <button onClick={logout} className="rounded-md bg-gray-100 px-5 py-2.5 text-sm font-medium text-teal-600">Logout</button>
                 }
                 </div>
-
-                <div className="block md:hidden">
-                <button
-                    className="rounded bg-gray-100 p-2 text-gray-600 transition hover:text-gray-600/75"
-                >
-                    <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-5 w-5"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    >
-                    <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M4 6h16M4 12h16M4 18h16"
-                    />
-                    </svg>
-                </button>
-                </div>
             </div>
             </div>
         </div>
+        <MobileMenu open={open} />
         </header>
     );
 }
