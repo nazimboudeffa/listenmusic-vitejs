@@ -5,16 +5,18 @@ const HitParade = () => {
     const [token, setToken] = useState("")
     const [playLists, setPlayLists] = useState([])
     const [songs, setSongs] = useState([])
-    const [selectedItemCountry, setSelectedItemCountry] = useState("default")
     const [selectedItemPlayList, setSelectedItemPlayList] = useState("default")
 
     useEffect(() => {
         let token = window.localStorage.getItem("token")
         setToken(token)
+        if (token) {
+            getPlayLists(token, "fr_FR").then(playLists => setPlayLists(playLists))
+        }
     }, [])
 
     const getPlayLists = async (token, country) => {
-        const {data} = await axios.get("https://api.spotify.com/v1/browse/featured-playlists?country="+country, {
+        const {data} = await axios.get("https://api.spotify.com/v1/browse/featured-playlists?locale="+country, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -33,11 +35,6 @@ const HitParade = () => {
         return data.items
     }
 
-    const handleChangeCountry = (e) => {
-        setSelectedItemCountry(e.target.value)
-        getPlayLists(token, e.target.value).then(playLists => setPlayLists(playLists))
-      }
-
     const handleChangePlayList = (e) => {
         setSelectedItemPlayList(e.target.value)
         getSongsFromPlayList(token, e.target.value).then(songs => {let sortedSongs = songs.sort((a, b) => b.track.popularity - a.track.popularity); setSongs(sortedSongs)})
@@ -45,11 +42,7 @@ const HitParade = () => {
 
     return (
         <section>
-            <select className="w-full border border-gray-300 rounded px-2 py-1 mb-5"  name="country" value={selectedItemCountry} onChange={(e)=>handleChangeCountry(e)}>
-                <option value="default">Select country</option>
-                <option value="DZ">Algeria</option>
-                <option value="FR">France</option>
-            </select>
+            <h1>Hit Parade</h1>
             <select className="w-full border border-gray-300 rounded px-2 py-1 mb-5"  name="order" value={selectedItemPlayList} onChange={(e)=>handleChangePlayList(e)}>
                 <option value="default">Select playlist</option>
                 {playLists.map(playList => (
@@ -72,7 +65,7 @@ const HitParade = () => {
                         <td className="px-6 py-4">{song.track.album.name}</td>
                         <td className="px-6 py-4">{song.track.name}</td>
                         <td className="px-6 py-4">{song.track.popularity}</td>
-                        <td className="px-6 py-4"><a href={song.track.uri}>Listen</a></td>
+                        <td className="px-6 py-4"><a href={song.track.external_urls.spotify}>Listen</a></td>
                     </tr>
                 ))}
                     </tbody>
